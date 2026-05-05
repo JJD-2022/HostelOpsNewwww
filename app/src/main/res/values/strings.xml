@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">HostelOps</string>
+    <string name="welcome_msg">Welcome to HostelOps</string>
+    <string name="select_role">I am a...</string>
+    <string name="student">Student</string>
+    <string name="staff">Staff</string>
+    <string name="admin">Admin</string>
+    <string name="login">Login</string>
+    <string name="email_hint">Institutional Email</string>
+    <string name="password_hint">Password</string>
+    <string name="submit_complaint">Submit Complaint</string>
+    <string name="complaint_description">Description</string>
+    <string name="complaint_location">Location (Block/Floor)</string>
+    <string name="complaint_category">Category</string>
+    <string name="upload_photo">Upload Photo</string>
+    <string name="not_seen">Not Seen</string>
+    <string name="in_progress">In Progress</string>
+    <string name="resolved">Resolved</string>
+</resources>

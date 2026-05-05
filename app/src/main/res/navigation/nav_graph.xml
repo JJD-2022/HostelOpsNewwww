@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/roleSelectionFragment">
+
+    <fragment
+        android:id="@+id/roleSelectionFragment"
+        android:name="com.hostelops.ui.auth.RoleSelectionFragment"
+        android:label="Select Role"
+        tools:layout="@layout/fragment_role_selection">
+        <action
+            android:id="@+id/action_roleSelectionFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.hostelops.ui.auth.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login">
+        <argument
+            android:name="role"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_loginFragment_to_studentDashboardFragment"
+            app:destination="@id/studentDashboardFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_loginFragment_to_staffDashboardFragment"
+            app:destination="@id/staffDashboardFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_loginFragment_to_adminDashboardFragment"
+            app:destination="@id/adminDashboardFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/studentDashboardFragment"
+        android:name="com.hostelops.ui.student.StudentDashboardFragment"
+        android:label="Student Dashboard"
+        tools:layout="@layout/fragment_student_dashboard">
+        <action
+            android:id="@+id/action_studentDashboardFragment_to_complaintFormFragment"
+            app:destination="@id/complaintFormFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/complaintFormFragment"
+        android:name="com.hostelops.ui.student.ComplaintFormFragment"
+        android:label="Submit Complaint"
+        tools:layout="@layout/fragment_complaint_form" />
+
+    <fragment
+        android:id="@+id/staffDashboardFragment"
+        android:name="com.hostelops.ui.staff.StaffDashboardFragment"
+        android:label="Staff Feed"
+        tools:layout="@layout/fragment_staff_dashboard" />
+
+    <fragment
+        android:id="@+id/adminDashboardFragment"
+        android:name="com.hostelops.ui.admin.AdminDashboardFragment"
+        android:label="Admin Dashboard"
+        tools:layout="@layout/fragment_admin_dashboard" />
+
+</navigation>
