@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "221608131480",
+    "project_id": "hostelopsne-91cb6",
+    "storage_bucket": "hostelopsne-91cb6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:221608131480:android:fb842063f2171fb2bc49ed",
+        "android_client_info": {
+          "package_name": "com.hostelops"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1htP-RxeSmYgSSY-W9coQOdaXlsihfMw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
