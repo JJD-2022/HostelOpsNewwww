@@ -61,6 +61,7 @@ class SignupFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.tvSignupTitle.text = "Signup as ${args.role}"
+        binding.tvLoginLink.text = "Already a ${args.role.lowercase()}? Login here"
         
         if (args.role != "STUDENT") {
             binding.tilRollNo.hint = "Employee ID"

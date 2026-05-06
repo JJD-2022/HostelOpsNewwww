@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.hostelops.R
 import com.hostelops.databinding.FragmentPlaceholderBinding
 
 class MyComplaintsFragment : Fragment() {

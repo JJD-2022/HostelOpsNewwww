@@ -4,11 +4,16 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.view.GravityCompat
 import androidx.navigation.fragment.NavHostFragment
@@ -16,6 +21,7 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import coil.load
 import coil.transform.CircleCropTransformation
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
@@ -33,6 +39,14 @@ class MainActivity : AppCompatActivity() {
     private var notificationListener: ListenerRegistration? = null
     private var userRole: String? = null
 
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (!isGranted) {
+            Toast.makeText(this, "Notifications permission denied. You won't receive updates.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
         val isDarkMode = prefs.getBoolean("dark_mode", false)
@@ -44,11 +58,18 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         CloudinaryHelper.init(this)
+        
+        // Update last opened session
+        getSharedPreferences("session_prefs", Context.MODE_PRIVATE)
+            .edit().putLong("last_opened", System.currentTimeMillis()).apply()
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
+        
+        userRole = intent.getStringExtra("ROLE")
         
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -63,7 +84,8 @@ class MainActivity : AppCompatActivity() {
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             if (menuItem.itemId == R.id.logoutItem) {
                 auth.signOut()
-                navController.navigate(R.id.loginFragment)
+                userRole = null
+                navController.navigate(R.id.action_global_roleSelectionFragment)
                 binding.drawerLayout.closeDrawer(GravityCompat.START)
                 true
             } else {
@@ -96,7 +118,18 @@ class MainActivity : AppCompatActivity() {
             }
         }
         
+        askNotificationPermission()
         createNotificationChannel()
+    }
+
+    private fun askNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) !=
+                PackageManager.PERMISSION_GRANTED
+            ) {
+                requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
     }
 
     private fun startNotificationListener() {
@@ -118,10 +151,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateNavigationMenu(role: String?) {
         binding.navigationView.menu.clear()
-        when (role) {
-            "Student" -> binding.navigationView.inflateMenu(R.menu.menu_student_drawer)
-            "Staff" -> binding.navigationView.inflateMenu(R.menu.menu_staff_drawer)
-            "Admin" -> binding.navigationView.inflateMenu(R.menu.menu_admin_drawer)
+        when (role?.uppercase()) {
+            "STUDENT" -> binding.navigationView.inflateMenu(R.menu.menu_student_drawer)
+            "STAFF" -> binding.navigationView.inflateMenu(R.menu.menu_staff_drawer)
+            "ADMIN" -> binding.navigationView.inflateMenu(R.menu.menu_admin_drawer)
         }
     }
 
@@ -194,18 +227,33 @@ class MainActivity : AppCompatActivity() {
     private fun updateProfileIcon() {
         val user = auth.currentUser
         if (user != null) {
+            val headerView = binding.navigationView.getHeaderView(0)
+            val ivHeaderAvatar = headerView.findViewById<ShapeableImageView>(R.id.ivHeaderAvatar)
+            val tvHeaderName = headerView.findViewById<TextView>(R.id.tvHeaderName)
+            val tvHeaderEmail = headerView.findViewById<TextView>(R.id.tvHeaderEmail)
+
             db.collection("users").document(user.uid).get().addOnSuccessListener {
                 val name = it.getString("name") ?: user.displayName ?: "User"
+                val email = it.getString("email") ?: user.email ?: ""
                 val photoUrl = it.getString("photoUrl") ?: user.photoUrl?.toString()
                 
+                tvHeaderName.text = name
+                tvHeaderEmail.text = email
+
                 if (photoUrl != null) {
                     binding.ivUserProfile.load(photoUrl) {
                         crossfade(true)
                         placeholder(AvatarUtils.getLetterAvatar(this@MainActivity, name))
                         transformations(CircleCropTransformation())
                     }
+                    ivHeaderAvatar.load(photoUrl) {
+                        crossfade(true)
+                        placeholder(AvatarUtils.getLetterAvatar(this@MainActivity, name))
+                        transformations(CircleCropTransformation())
+                    }
                 } else {
                     binding.ivUserProfile.setImageDrawable(AvatarUtils.getLetterAvatar(this, name))
+                    ivHeaderAvatar.setImageDrawable(AvatarUtils.getLetterAvatar(this, name))
                 }
             }
         }

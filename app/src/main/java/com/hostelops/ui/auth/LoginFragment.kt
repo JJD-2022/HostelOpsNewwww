@@ -61,6 +61,7 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.tvLoginTitle.text = "Login as ${args.role}"
+        binding.tvSignupLink.text = "New to HostelOps? Sign up here"
 
         binding.btnLogin.setOnClickListener {
             val email = binding.etEmail.text.toString().trim()
@@ -81,7 +82,7 @@ class LoginFragment : Fragment() {
         }
 
         binding.tvSignupLink.setOnClickListener {
-            val action = LoginFragmentDirections.actionLoginFragment_to_signupFragment(args.role)
+            val action = LoginFragmentDirections.actionLoginFragmentToSignupFragment(args.role)
             findNavController().navigate(action)
         }
 

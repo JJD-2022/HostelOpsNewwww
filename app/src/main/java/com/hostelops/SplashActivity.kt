@@ -1,5 +1,6 @@
 package com.hostelops
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -21,6 +22,43 @@ class SplashActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
+
+        // Set version
+        try {
+            val pInfo = packageManager.getPackageInfo(packageName, 0)
+            binding.tvAppVersion.text = "Version ${pInfo.versionName}"
+        } catch (e: Exception) {
+            binding.tvAppVersion.text = "Version 1.0.0"
+        }
+
+        // Set random quote
+        val quotes = arrayOf(
+            "\"Success is not final, failure is not fatal: it is the courage to continue that counts.\" - Winston Churchill",
+            "\"The only way to do great work is to love what you do.\" - Steve Jobs",
+            "\"Believe you can and you're halfway there.\" - Theodore Roosevelt",
+            "\"Your time is limited, don't waste it living someone else's life.\" - Steve Jobs",
+            "\"Hardships often prepare ordinary people for an extraordinary destiny.\" - C.S. Lewis",
+            "\"The best way to predict the future is to create it.\" - Peter Drucker",
+            "\"Everything you've ever wanted is on the other side of fear.\" - George Addair",
+            "\"The journey of a thousand miles begins with one step.\" - Lao Tzu"
+        )
+        binding.tvQuote.text = quotes.random()
+
+        checkSessionAndNavigate()
+    }
+
+    private fun checkSessionAndNavigate() {
+        val prefs = getSharedPreferences("session_prefs", Context.MODE_PRIVATE)
+        val lastOpened = prefs.getLong("last_opened", 0L)
+        val currentTime = System.currentTimeMillis()
+        val twentyDaysInMillis = 20L * 24 * 60 * 60 * 1000
+
+        if (lastOpened != 0L && (currentTime - lastOpened) > twentyDaysInMillis) {
+            auth.signOut()
+        }
+
+        // Update last opened time
+        prefs.edit().putLong("last_opened", currentTime).apply()
 
         Handler(Looper.getMainLooper()).postDelayed({
             checkUserAndNavigate()
