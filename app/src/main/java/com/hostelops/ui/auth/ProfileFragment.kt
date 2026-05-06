@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import coil.load
 import coil.transform.CircleCropTransformation
-import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
 import com.cloudinary.android.callback.UploadCallback
 import com.google.firebase.auth.FirebaseAuth
@@ -21,13 +20,14 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.hostelops.R
 import com.hostelops.databinding.FragmentProfileBinding
 import com.hostelops.utils.AvatarUtils
+import com.hostelops.utils.CloudinaryHelper
 import java.io.File
 
 class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
-    
+
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
     private var imageUri: Uri? = null
@@ -58,12 +58,8 @@ class ProfileFragment : Fragment() {
         setupSpinners()
         loadUserData()
 
-        binding.btnUpdateAddress.setOnClickListener {
-            updateAddress()
-        }
-
-        binding.btnUpdateLocation.setOnClickListener {
-            updateLocation()
+        binding.btnUpdateProfile.setOnClickListener {
+            updateUserProfile()
         }
 
         binding.btnChangePhotoGallery.setOnClickListener {
@@ -93,37 +89,32 @@ class ProfileFragment : Fragment() {
         db.collection("users").document(user.uid).get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
-                    val name = document.getString("name") ?: user.displayName ?: "User"
+                    val name = document.getString("name") ?: user.displayName ?: ""
                     val role = document.getString("role") ?: ""
                     val block = document.getString("block") ?: ""
                     val roomNo = document.getString("roomNo") ?: ""
+                    val email = document.getString("email") ?: user.email ?: ""
+                    val rollNo = document.getString("rollNo") ?: ""
+                    val phone = document.getString("phone") ?: user.phoneNumber ?: ""
+                    val address = document.getString("address") ?: ""
 
-                    binding.tvUserName.text = name
-                    binding.tvUserEmail.text = document.getString("email") ?: user.email
+                    binding.etProfileName.setText(name)
+                    binding.etProfileEmail.setText(email)
                     binding.tvUserRole.text = role
-                    binding.tvRollNo.text = document.getString("rollNo") ?: "N/A"
-                    binding.tvPhone.text = document.getString("phone") ?: user.phoneNumber ?: "N/A"
-                    binding.etProfileAddress.setText(document.getString("address") ?: "")
+                    binding.etProfileRollNo.setText(rollNo)
+                    binding.etProfilePhone.setText(phone)
+                    binding.etProfileAddress.setText(address)
                     
                     if (role == "STUDENT") {
-                        binding.tvRollNoLabel.text = "Roll No"
+                        binding.tilProfileRollNo.hint = "Roll No"
                         binding.layoutPhotoActions.visibility = View.VISIBLE
-                        binding.layoutStudentLocation.visibility = View.VISIBLE
-                        binding.cardStudentEdit.visibility = View.VISIBLE
-                        
-                        if (block.isNotEmpty() && roomNo.isNotEmpty()) {
-                            binding.tvProfileLocation.text = "$block, Room $roomNo"
-                        } else {
-                            binding.tvProfileLocation.text = "Location not set"
-                        }
-                        
+                        binding.layoutStudentHostel.visibility = View.VISIBLE
                         binding.etProfileBlock.setText(block, false)
                         binding.etProfileRoom.setText(roomNo)
                     } else {
-                        binding.tvRollNoLabel.text = "Employee ID"
+                        binding.tilProfileRollNo.hint = "Employee ID"
                         binding.layoutPhotoActions.visibility = View.GONE
-                        binding.layoutStudentLocation.visibility = View.GONE
-                        binding.cardStudentEdit.visibility = View.GONE
+                        binding.layoutStudentHostel.visibility = View.GONE
                     }
 
                     val photoUrl = document.getString("photoUrl") ?: user.photoUrl?.toString()
@@ -140,70 +131,68 @@ class ProfileFragment : Fragment() {
             }
     }
 
-    private fun updateAddress() {
+    private fun updateUserProfile() {
         val uid = auth.currentUser?.uid ?: return
-        val newAddress = binding.etProfileAddress.text.toString().trim()
-
-        binding.btnUpdateAddress.isEnabled = false
-        db.collection("users").document(uid).update("address", newAddress)
-            .addOnSuccessListener {
-                binding.btnUpdateAddress.isEnabled = true
-                Toast.makeText(context, "Address updated successfully", Toast.LENGTH_SHORT).show()
-            }
-            .addOnFailureListener {
-                binding.btnUpdateAddress.isEnabled = true
-                Toast.makeText(context, "Failed to update address", Toast.LENGTH_SHORT).show()
-            }
-    }
-
-    private fun updateLocation() {
-        val uid = auth.currentUser?.uid ?: return
-        val block = binding.etProfileBlock.text.toString()
+        val name = binding.etProfileName.text.toString().trim()
+        val phone = binding.etProfilePhone.text.toString().trim()
+        val rollNo = binding.etProfileRollNo.text.toString().trim()
+        val address = binding.etProfileAddress.text.toString().trim()
+        val block = binding.etProfileBlock.text.toString().trim()
         val roomNo = binding.etProfileRoom.text.toString().trim()
 
-        if (block.isEmpty() || roomNo.isEmpty()) {
-            Toast.makeText(context, "Please enter both block and room number", Toast.LENGTH_SHORT).show()
+        if (name.isEmpty()) {
+            Toast.makeText(context, "Name cannot be empty", Toast.LENGTH_SHORT).show()
             return
         }
 
-        binding.btnUpdateLocation.isEnabled = false
-        val updates = mapOf("block" to block, "roomNo" to roomNo)
+        val updates = hashMapOf<String, Any>(
+            "name" to name,
+            "phone" to phone,
+            "rollNo" to rollNo,
+            "address" to address
+        )
+
+        // Only add student fields if they are visible
+        if (binding.layoutStudentHostel.visibility == View.VISIBLE) {
+            updates["block"] = block
+            updates["roomNo"] = roomNo
+        }
+
         db.collection("users").document(uid).update(updates)
             .addOnSuccessListener {
-                binding.btnUpdateLocation.isEnabled = true
-                Toast.makeText(context, "Location updated successfully", Toast.LENGTH_SHORT).show()
-                loadUserData()
+                Toast.makeText(context, "Profile updated successfully", Toast.LENGTH_SHORT).show()
+                loadUserData() // Refresh UI
             }
             .addOnFailureListener {
-                binding.btnUpdateLocation.isEnabled = true
-                Toast.makeText(context, "Failed to update location", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Failed to update profile", Toast.LENGTH_SHORT).show()
             }
     }
 
     private fun uploadProfileImage(uri: Uri) {
-        Toast.makeText(context, "Uploading profile picture...", Toast.LENGTH_SHORT).show()
-        MediaManager.get().upload(uri)
-            .unsigned("kkkae34a") 
-            .callback(object : UploadCallback {
-                override fun onStart(requestId: String) {}
-                override fun onProgress(requestId: String, bytes: Long, totalBytes: Long) {}
-                override fun onSuccess(requestId: String, resultData: Map<*, *>) {
-                    val photoUrl = resultData["secure_url"] as String
-                    saveProfilePhotoUrl(photoUrl)
-                }
-                override fun onError(requestId: String, error: ErrorInfo) {
+        CloudinaryHelper.uploadImage(requireContext(), uri, object : UploadCallback {
+            override fun onStart(requestId: String) {}
+            override fun onProgress(requestId: String, bytes: Long, totalBytes: Long) {}
+            override fun onSuccess(requestId: String, resultData: Map<*, *>) {
+                val url = resultData["secure_url"] as String
+                saveProfilePhotoUrl(url)
+            }
+            override fun onError(requestId: String, error: ErrorInfo) {
+                activity?.runOnUiThread {
                     Toast.makeText(context, "Upload failed: ${error.description}", Toast.LENGTH_SHORT).show()
                 }
-                override fun onReschedule(requestId: String, error: ErrorInfo) {}
-            }).dispatch()
+            }
+            override fun onReschedule(requestId: String, error: ErrorInfo) {}
+        })
     }
 
     private fun saveProfilePhotoUrl(url: String) {
         val uid = auth.currentUser?.uid ?: return
         db.collection("users").document(uid).update("photoUrl", url)
             .addOnSuccessListener {
-                Toast.makeText(context, "Profile picture updated", Toast.LENGTH_SHORT).show()
-                loadUserData()
+                binding.ivProfileDetail.load(url) {
+                    transformations(CircleCropTransformation())
+                }
+                Toast.makeText(context, "Photo updated", Toast.LENGTH_SHORT).show()
             }
     }
 

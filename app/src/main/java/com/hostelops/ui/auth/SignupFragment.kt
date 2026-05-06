@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -74,8 +76,8 @@ class SignupFragment : Fragment() {
 
         binding.btnSignup.setOnClickListener {
             val name = binding.etName.text.toString().trim()
-            val rollNo = binding.etRollNo.text.toString().trim()
             val email = binding.etEmail.text.toString().trim()
+            var rollNo = binding.etRollNo.text.toString().trim()
             val phone = binding.etPhone.text.toString().trim()
             val address = binding.etAddress.text.toString().trim()
             val password = binding.etPassword.text.toString().trim()
@@ -91,6 +93,11 @@ class SignupFragment : Fragment() {
             if (!email.endsWith("@psgtech.ac.in")) {
                 Toast.makeText(context, "Only @psgtech.ac.in emails are allowed", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
+            }
+
+            // Auto-extract roll number if empty for students
+            if (args.role == "STUDENT" && rollNo.isEmpty()) {
+                rollNo = email.substringBefore("@")
             }
 
             if (args.role == "STUDENT" && (block.isEmpty() || roomNo.isEmpty())) {
@@ -135,13 +142,22 @@ class SignupFragment : Fragment() {
         auth.signInWithCredential(credential)
             .addOnSuccessListener {
                 val user = it.user
+                val email = user?.email ?: ""
+                
+                if (!email.endsWith("@psgtech.ac.in")) {
+                    auth.signOut()
+                    Toast.makeText(context, "Only @psgtech.ac.in emails are allowed", Toast.LENGTH_LONG).show()
+                    return@addOnSuccessListener
+                }
+
                 if (user != null) {
+                    val extractedRollNo = if (args.role == "STUDENT") email.substringBefore("@") else ""
                     saveUserToFirestore(
                         uid = user.uid,
                         email = user.email ?: "",
                         role = args.role,
                         name = user.displayName ?: "",
-                        rollNo = "",
+                        rollNo = extractedRollNo,
                         phone = user.phoneNumber ?: "",
                         address = "",
                         block = "",
@@ -179,12 +195,31 @@ class SignupFragment : Fragment() {
 
         db.collection("users").document(uid).set(userMap)
             .addOnSuccessListener {
-                Toast.makeText(context, "Signup Successful", Toast.LENGTH_SHORT).show()
-                navigateToDashboard(role)
+                if (phone.isEmpty() && role == "STUDENT") {
+                    showPhonePromptDialog(role)
+                } else {
+                    Toast.makeText(context, "Signup Successful", Toast.LENGTH_SHORT).show()
+                    navigateToDashboard(role)
+                }
             }
             .addOnFailureListener {
                 Toast.makeText(context, "Error saving user data", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun showPhonePromptDialog(role: String) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Add Phone Number")
+            .setMessage("Please add your phone number to help us contact you regarding your complaints.")
+            .setPositiveButton("Go to Profile") { _, _ ->
+                navigateToDashboard(role)
+                findNavController().navigate(R.id.profileFragment)
+            }
+            .setNegativeButton("Later") { _, _ ->
+                navigateToDashboard(role)
+            }
+            .setCancelable(false)
+            .show()
     }
 
     private fun navigateToDashboard(role: String) {

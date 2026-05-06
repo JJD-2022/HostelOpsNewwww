@@ -97,6 +97,14 @@ class LoginFragment : Fragment() {
         auth.signInWithCredential(credential)
             .addOnSuccessListener {
                 val user = it.user
+                val email = user?.email ?: ""
+
+                if (!email.endsWith("@psgtech.ac.in")) {
+                    auth.signOut()
+                    Toast.makeText(context, "Only @psgtech.ac.in emails are allowed", Toast.LENGTH_LONG).show()
+                    return@addOnSuccessListener
+                }
+
                 if (user != null) {
                     checkUserRoleAndNavigate(user.uid)
                 }

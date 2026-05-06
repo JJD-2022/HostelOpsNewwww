@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "221608131480-lqolh05grv04cvkb0trt4meb1bvrtb04.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hostelops",
+            "certificate_hash": "be60fb34f6b47a95cbacc8c77ee5f64ac4b2d6d0"
+          }
+        },
+        {
           "client_id": "221608131480-f2rnnl391dp7htpilik6vh5lp61md936.apps.googleusercontent.com",
           "client_type": 3
         }
