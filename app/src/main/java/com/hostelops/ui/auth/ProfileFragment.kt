@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
@@ -54,10 +55,15 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupSpinners()
         loadUserData()
 
         binding.btnUpdateAddress.setOnClickListener {
             updateAddress()
+        }
+
+        binding.btnUpdateLocation.setOnClickListener {
+            updateLocation()
         }
 
         binding.btnChangePhotoGallery.setOnClickListener {
@@ -76,6 +82,11 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    private fun setupSpinners() {
+        val blocks = arrayOf("N Block", "Q Block", "R Block", "S Block", "T Block")
+        binding.etProfileBlock.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, blocks))
+    }
+
     private fun loadUserData() {
         val user = auth.currentUser ?: return
         
@@ -83,18 +94,36 @@ class ProfileFragment : Fragment() {
             .addOnSuccessListener { document ->
                 if (document.exists()) {
                     val name = document.getString("name") ?: user.displayName ?: "User"
+                    val role = document.getString("role") ?: ""
+                    val block = document.getString("block") ?: ""
+                    val roomNo = document.getString("roomNo") ?: ""
+
                     binding.tvUserName.text = name
                     binding.tvUserEmail.text = document.getString("email") ?: user.email
-                    binding.tvUserRole.text = document.getString("role")
+                    binding.tvUserRole.text = role
                     binding.tvRollNo.text = document.getString("rollNo") ?: "N/A"
                     binding.tvPhone.text = document.getString("phone") ?: user.phoneNumber ?: "N/A"
                     binding.etProfileAddress.setText(document.getString("address") ?: "")
                     
-                    if (document.getString("role") != "STUDENT") {
+                    if (role == "STUDENT") {
+                        binding.tvRollNoLabel.text = "Roll No"
+                        binding.layoutPhotoActions.visibility = View.VISIBLE
+                        binding.layoutStudentLocation.visibility = View.VISIBLE
+                        binding.cardStudentEdit.visibility = View.VISIBLE
+                        
+                        if (block.isNotEmpty() && roomNo.isNotEmpty()) {
+                            binding.tvProfileLocation.text = "$block, Room $roomNo"
+                        } else {
+                            binding.tvProfileLocation.text = "Location not set"
+                        }
+                        
+                        binding.etProfileBlock.setText(block, false)
+                        binding.etProfileRoom.setText(roomNo)
+                    } else {
                         binding.tvRollNoLabel.text = "Employee ID"
                         binding.layoutPhotoActions.visibility = View.GONE
-                    } else {
-                        binding.layoutPhotoActions.visibility = View.VISIBLE
+                        binding.layoutStudentLocation.visibility = View.GONE
+                        binding.cardStudentEdit.visibility = View.GONE
                     }
 
                     val photoUrl = document.getString("photoUrl") ?: user.photoUrl?.toString()
@@ -124,6 +153,30 @@ class ProfileFragment : Fragment() {
             .addOnFailureListener {
                 binding.btnUpdateAddress.isEnabled = true
                 Toast.makeText(context, "Failed to update address", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun updateLocation() {
+        val uid = auth.currentUser?.uid ?: return
+        val block = binding.etProfileBlock.text.toString()
+        val roomNo = binding.etProfileRoom.text.toString().trim()
+
+        if (block.isEmpty() || roomNo.isEmpty()) {
+            Toast.makeText(context, "Please enter both block and room number", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        binding.btnUpdateLocation.isEnabled = false
+        val updates = mapOf("block" to block, "roomNo" to roomNo)
+        db.collection("users").document(uid).update(updates)
+            .addOnSuccessListener {
+                binding.btnUpdateLocation.isEnabled = true
+                Toast.makeText(context, "Location updated successfully", Toast.LENGTH_SHORT).show()
+                loadUserData()
+            }
+            .addOnFailureListener {
+                binding.btnUpdateLocation.isEnabled = true
+                Toast.makeText(context, "Failed to update location", Toast.LENGTH_SHORT).show()
             }
     }
 

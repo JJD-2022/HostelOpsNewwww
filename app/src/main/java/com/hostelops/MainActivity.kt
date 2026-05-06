@@ -3,12 +3,17 @@ package com.hostelops
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.NotificationCompat
+import androidx.core.view.GravityCompat
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupWithNavController
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.google.firebase.auth.FirebaseAuth
@@ -29,6 +34,14 @@ class MainActivity : AppCompatActivity() {
     private var userRole: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
+        val isDarkMode = prefs.getBoolean("dark_mode", false)
+        if (isDarkMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
+
         super.onCreate(savedInstanceState)
         CloudinaryHelper.init(this)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -40,6 +53,27 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
+        
+        binding.navigationView.setupWithNavController(navController)
+        
+        binding.toolbar.setNavigationOnClickListener {
+            binding.drawerLayout.openDrawer(GravityCompat.START)
+        }
+
+        binding.navigationView.setNavigationItemSelectedListener { menuItem ->
+            if (menuItem.itemId == R.id.logoutItem) {
+                auth.signOut()
+                navController.navigate(R.id.loginFragment)
+                binding.drawerLayout.closeDrawer(GravityCompat.START)
+                true
+            } else {
+                val handled = NavigationUI.onNavDestinationSelected(menuItem, navController)
+                if (handled) {
+                    binding.drawerLayout.closeDrawer(GravityCompat.START)
+                }
+                handled
+            }
+        }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
@@ -73,10 +107,21 @@ class MainActivity : AppCompatActivity() {
         if (userRole == null) {
             db.collection("users").document(user.uid).get().addOnSuccessListener {
                 userRole = it.getString("role")
+                updateNavigationMenu(userRole)
                 setupListener(user.uid, userRole)
             }
         } else {
+            updateNavigationMenu(userRole)
             setupListener(user.uid, userRole)
+        }
+    }
+
+    private fun updateNavigationMenu(role: String?) {
+        binding.navigationView.menu.clear()
+        when (role) {
+            "Student" -> binding.navigationView.inflateMenu(R.menu.menu_student_drawer)
+            "Staff" -> binding.navigationView.inflateMenu(R.menu.menu_staff_drawer)
+            "Admin" -> binding.navigationView.inflateMenu(R.menu.menu_admin_drawer)
         }
     }
 

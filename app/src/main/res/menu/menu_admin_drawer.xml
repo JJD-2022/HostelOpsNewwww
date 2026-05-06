@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/adminDashboardFragment"
+            android:icon="@android:drawable/ic_menu_today"
+            android:title="Dashboard" />
+        <item
+            android:id="@+id/analyticsFragment"
+            android:icon="@android:drawable/ic_menu_sort_by_size"
+            android:title="Analytics" />
+        <item
+            android:id="@+id/allComplaintsFragment"
+            android:icon="@android:drawable/ic_menu_agenda"
+            android:title="All Complaints" />
+        <item
+            android:id="@+id/adminUsersFragment"
+            android:icon="@android:drawable/ic_menu_myplaces"
+            android:title="Manage Users" />
+        <item
+            android:id="@+id/manageStaffFragment"
+            android:icon="@android:drawable/ic_menu_gallery"
+            android:title="Manage Staff" />
+        <item
+            android:id="@+id/reportsFragment"
+            android:icon="@android:drawable/ic_menu_edit"
+            android:title="Reports" />
+    </group>
+    <item android:title="Others">
+        <menu>
+            <item
+                android:id="@+id/settingsFragment"
+                android:icon="@android:drawable/ic_menu_preferences"
+                android:title="Settings" />
+            <item
+                android:id="@+id/logoutItem"
+                android:icon="@android:drawable/ic_lock_power_off"
+                android:title="Logout" />
+        </menu>
+    </item>
+</menu>

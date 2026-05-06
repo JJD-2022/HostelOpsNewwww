@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/staffDashboardFragment"
+            android:icon="@android:drawable/ic_menu_today"
+            android:title="Dashboard" />
+        <item
+            android:id="@+id/assignedComplaintsFragment"
+            android:icon="@android:drawable/ic_menu_agenda"
+            android:title="Assigned Complaints" />
+        <item
+            android:id="@+id/inProgressTasksFragment"
+            android:icon="@android:drawable/ic_menu_rotate"
+            android:title="In Progress Tasks" />
+        <item
+            android:id="@+id/completedTasksFragment"
+            android:icon="@android:drawable/ic_menu_save"
+            android:title="Completed Tasks" />
+    </group>
+    <item android:title="Others">
+        <menu>
+            <item
+                android:id="@+id/settingsFragment"
+                android:icon="@android:drawable/ic_menu_preferences"
+                android:title="Settings" />
+            <item
+                android:id="@+id/logoutItem"
+                android:icon="@android:drawable/ic_lock_power_off"
+                android:title="Logout" />
+        </menu>
+    </item>
+</menu>

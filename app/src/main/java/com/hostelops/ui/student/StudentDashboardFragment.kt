@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,11 +38,37 @@ class StudentDashboardFragment : Fragment() {
 
         binding.rvComplaints.layoutManager = LinearLayoutManager(context)
         
+        checkProfileCompleteness()
         loadComplaints()
 
         binding.fabAddComplaint.setOnClickListener {
             findNavController().navigate(R.id.action_studentDashboardFragment_to_complaintFormFragment)
         }
+    }
+
+    private fun checkProfileCompleteness() {
+        val uid = auth.currentUser?.uid ?: return
+        db.collection("users").document(uid).get().addOnSuccessListener { document ->
+            val block = document.getString("block") ?: ""
+            val roomNo = document.getString("roomNo") ?: ""
+            
+            if (block.isEmpty() || roomNo.isEmpty()) {
+                showIncompleteProfileDialog()
+            }
+        }
+    }
+
+    private fun showIncompleteProfileDialog() {
+        if (context == null) return
+        
+        AlertDialog.Builder(requireContext())
+            .setTitle("Profile Incomplete")
+            .setMessage("Please update your Hostel Block and Room Number in your profile to continue.")
+            .setPositiveButton("Go to Profile") { _, _ ->
+                findNavController().navigate(R.id.profileFragment)
+            }
+            .setCancelable(false)
+            .show()
     }
 
     private fun loadComplaints() {
