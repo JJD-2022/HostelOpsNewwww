@@ -9,8 +9,10 @@ import com.hostelops.models.Complaint
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class ComplaintAdapter(private val complaints: List<Complaint>) :
-    RecyclerView.Adapter<ComplaintAdapter.ViewHolder>() {
+class ComplaintAdapter(
+    private val complaints: List<Complaint>,
+    private val onComplaintClick: (Complaint) -> Unit
+) : RecyclerView.Adapter<ComplaintAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: ItemComplaintBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -26,13 +28,17 @@ class ComplaintAdapter(private val complaints: List<Complaint>) :
         holder.binding.tvLocation.text = complaint.location
         holder.binding.tvStatus.text = complaint.status
         
-        val sdf = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
+        val sdf = SimpleDateFormat("dd MMM, HH:mm", Locale.getDefault())
         holder.binding.tvTimestamp.text = sdf.format(complaint.timestamp.toDate())
 
         when (complaint.status) {
             "NOT_SEEN" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_status_not_seen)
             "IN_PROGRESS" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_status_in_progress)
             "RESOLVED" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.bg_status_resolved)
+        }
+
+        holder.itemView.setOnClickListener {
+            onComplaintClick(complaint)
         }
     }
 

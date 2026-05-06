@@ -16,4 +16,26 @@
     <string name="not_seen">Not Seen</string>
     <string name="in_progress">In Progress</string>
     <string name="resolved">Resolved</string>
+    <string name="login_with_google">Login with Google</string>
+    <string name="signup_with_google">Signup with Google</string>
+    <string name="new_user_signup">New user? Signup here</string>
+    <string name="already_have_account">Already have an account? Login here</string>
+    <string name="signup">Signup</string>
+    <string name="app_logo_desc">App Logo</string>
+    <string name="logout">Logout</string>
+    <string name="new_complaint">New Complaint</string>
+    <string name="recent_complaints">Recent Complaints</string>
+    <string name="mark_in_progress">Mark In Progress</string>
+    <string name="resolve_complaint">Resolve Complaint</string>
+    <string name="resolution_details">Resolution Details</string>
+    <string name="location">Location</string>
+    <string name="description">Description</string>
+    <string name="or_text">OR</string>
+    <string name="name_hint">Full Name</string>
+    <string name="roll_no_hint">Roll No / ID</string>
+    <string name="phone_hint">Phone Number</string>
+    <string name="address_hint">Address</string>
+    <string name="update_address">Update Address</string>
+    <string name="save">Save</string>
+    <string name="default_web_client_id" translatable="false">YOUR_CLIENT_ID_HERE</string>
 </resources>

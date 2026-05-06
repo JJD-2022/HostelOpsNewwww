@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -54,7 +55,10 @@ class AdminDashboardFragment : Fragment() {
             .addSnapshotListener { value, error ->
                 if (error != null) return@addSnapshotListener
                 val complaints = value?.toObjects(Complaint::class.java) ?: emptyList()
-                binding.rvAdminRecent.adapter = ComplaintAdapter(complaints)
+                binding.rvAdminRecent.adapter = ComplaintAdapter(complaints) { complaint ->
+                    val action = AdminDashboardFragmentDirections.actionAdminDashboardFragmentToComplaintDetailFragment(complaint.id)
+                    findNavController().navigate(action)
+                }
             }
     }
 

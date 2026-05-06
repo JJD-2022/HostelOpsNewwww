@@ -1,22 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Primary Colors -->
+    <color name="md_theme_primary">#006495</color>
+    <color name="md_theme_onPrimary">#ffffff</color>
+    <color name="md_theme_primaryContainer">#cbe6ff</color>
+    <color name="md_theme_onPrimaryContainer">#001e30</color>
 
-    <color name="primary">#6200EE</color>
-    <color name="primary_variant">#3700B3</color>
-    <color name="secondary">#03DAC6</color>
+    <!-- Secondary Colors -->
+    <color name="md_theme_secondary">#50606e</color>
+    <color name="md_theme_onSecondary">#ffffff</color>
+    <color name="md_theme_secondaryContainer">#d3e5f5</color>
+    <color name="md_theme_onSecondaryContainer">#0c1d29</color>
 
-    <!-- Modern palette -->
-    <color name="student_blue">#2196F3</color>
-    <color name="staff_green">#4CAF50</color>
-    <color name="admin_orange">#FF9800</color>
-    <color name="background_light">#F5F5F5</color>
-    <color name="background_dark">#121212</color>
-    <color name="error">#B00020</color>
+    <!-- Tertiary Colors -->
+    <color name="md_theme_tertiary">#65587b</color>
+    <color name="md_theme_onTertiary">#ffffff</color>
+    <color name="md_theme_tertiaryContainer">#ecdcff</color>
+    <color name="md_theme_onTertiaryContainer">#211634</color>
+
+    <!-- Background and Surface -->
+    <color name="md_theme_background">#fcfcff</color>
+    <color name="md_theme_onBackground">#1a1c1e</color>
+    <color name="md_theme_surface">#fcfcff</color>
+    <color name="md_theme_onSurface">#1a1c1e</color>
+    <color name="md_theme_surfaceVariant">#dee3eb</color>
+    <color name="md_theme_onSurfaceVariant">#42474e</color>
+
+    <!-- Error -->
+    <color name="md_theme_error">#ba1a1a</color>
+    <color name="md_theme_onError">#ffffff</color>
+
+    <!-- Role Specific (kept for backward compatibility or special highlights) -->
+    <color name="student_blue">#006495</color>
+    <color name="staff_green">#386a20</color>
+    <color name="admin_orange">#8b5000</color>
+
+    <!-- Legacy compatibility -->
+    <color name="primary">#006495</color>
+    <color name="secondary">#50606e</color>
+    <color name="background_light">#fcfcff</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
 </resources>

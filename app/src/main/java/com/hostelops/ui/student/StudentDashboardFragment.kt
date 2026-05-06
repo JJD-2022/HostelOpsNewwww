@@ -52,7 +52,10 @@ class StudentDashboardFragment : Fragment() {
             .addSnapshotListener { value, error ->
                 if (error != null) return@addSnapshotListener
                 val complaints = value?.toObjects(Complaint::class.java) ?: emptyList()
-                binding.rvComplaints.adapter = ComplaintAdapter(complaints)
+                binding.rvComplaints.adapter = ComplaintAdapter(complaints) { complaint ->
+                    val action = StudentDashboardFragmentDirections.actionStudentDashboardFragmentToComplaintDetailFragment(complaint.id)
+                    findNavController().navigate(action)
+                }
             }
     }
 
