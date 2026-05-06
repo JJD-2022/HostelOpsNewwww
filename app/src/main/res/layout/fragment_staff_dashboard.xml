@@ -1,95 +1,259 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/md_theme_background"
-    android:orientation="vertical">
+    android:background="@color/md_theme_background">
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="0dp"
-        app:cardElevation="1dp"
-        app:strokeWidth="0dp">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="12dp">
+            android:padding="16dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilSearch"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            <TextView
+                android:id="@+id/tvStaffGreeting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
+                android:textStyle="bold"
+                tools:text="Good Morning, Staff!" />
+
+            <TextView
+                android:id="@+id/tvStaffQuote"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="12dp"
-                android:hint="Search by category or location"
-                app:endIconMode="clear_text"
-                app:startIconDrawable="@android:drawable/ic_menu_search">
+                android:layout_marginTop="4dp"
+                android:fontStyle="italic"
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                android:textColor="@color/md_theme_onSurfaceVariant"
+                tools:text="&quot;Efficiency is doing things right; effectiveness is doing the right things.&quot;" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etSearch"
+            <!-- Stats Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="4dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/md_theme_errorContainer">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:id="@+id/tvNewTasks"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                            android:textStyle="bold"
+                            android:textColor="@color/md_theme_onErrorContainer"
+                            tools:text="5" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="New"
+                            android:textColor="@color/md_theme_onErrorContainer"
+                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginHorizontal="4dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/md_theme_tertiaryContainer">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:id="@+id/tvActiveTasks"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                            android:textStyle="bold"
+                            android:textColor="@color/md_theme_onTertiaryContainer"
+                            tools:text="3" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Active"
+                            android:textColor="@color/md_theme_onTertiaryContainer"
+                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/md_theme_primaryContainer">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:id="@+id/tvCompletedTasks"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                            android:textStyle="bold"
+                            android:textColor="@color/md_theme_onPrimaryContainer"
+                            tools:text="12" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Fixed"
+                            android:textColor="@color/md_theme_onPrimaryContainer"
+                            android:textAppearance="@style/TextAppearance.Material3.LabelSmall" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- Search and Filter Section -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/md_theme_surfaceVariant"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:orientation="vertical"
+                    android:paddingBottom="12dp">
 
-            <HorizontalScrollView
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilSearch"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="12dp"
+                        android:layout_marginTop="12dp"
+                        android:hint="Search complaints..."
+                        app:endIconMode="clear_text"
+                        app:startIconDrawable="@android:drawable/ic_menu_search">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etSearch"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:scrollbars="none">
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/chipGroupFilters"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="12dp"
+                            app:selectionRequired="true"
+                            app:singleSelection="true">
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipAll"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="true"
+                                android:text="All" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipEscalated"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Escalated"
+                                app:chipIcon="@android:drawable/stat_sys_warning" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipNotSeen"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Not Seen" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipInProgress"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="In Progress" />
+
+                        </com.google.android.material.chip.ChipGroup>
+                    </HorizontalScrollView>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Work List"
+                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvStaffComplaints"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:scrollbars="none">
+                android:nestedScrollingEnabled="false"
+                tools:listitem="@layout/item_complaint" />
 
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/chipGroupFilters"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="16dp"
-                    app:selectionRequired="true"
-                    app:singleSelection="true">
+            <TextView
+                android:id="@+id/tvStaffEmptyState"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:gravity="center"
+                android:text="Good job! No pending complaints in this category."
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                android:visibility="gone" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipAll"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="All" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipEscalated"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Urgent / Escalated"
-                        app:chipIcon="@android:drawable/stat_sys_warning" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipNotSeen"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Not Seen" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipInProgress"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="In Progress" />
-
-                </com.google.android.material.chip.ChipGroup>
-            </HorizontalScrollView>
         </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.core.widget.NestedScrollView>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvStaffComplaints"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="8dp" />
-
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

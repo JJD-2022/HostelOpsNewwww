@@ -18,10 +18,6 @@
             android:icon="@android:drawable/ic_menu_myplaces"
             android:title="Manage Users" />
         <item
-            android:id="@+id/manageStaffFragment"
-            android:icon="@android:drawable/ic_menu_gallery"
-            android:title="Manage Staff" />
-        <item
             android:id="@+id/reportsFragment"
             android:icon="@android:drawable/ic_menu_edit"
             android:title="Reports" />

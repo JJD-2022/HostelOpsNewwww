@@ -1,5 +1,6 @@
 package com.hostelops.ui.auth
 
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -31,6 +33,21 @@ class ProfileFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
     private var imageUri: Uri? = null
+    private var isEditMode = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState != null) {
+            imageUri = savedInstanceState.getParcelable("image_uri")
+            isEditMode = savedInstanceState.getBoolean("is_edit_mode")
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable("image_uri", imageUri)
+        outState.putBoolean("is_edit_mode", isEditMode)
+    }
 
     private val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let { uploadProfileImage(it) }
@@ -39,6 +56,14 @@ class ProfileFragment : Fragment() {
     private val takePhoto = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) {
             imageUri?.let { uploadProfileImage(it) }
+        }
+    }
+
+    private val requestCameraPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+        if (isGranted) {
+            launchCamera()
+        } else {
+            Toast.makeText(context, "Camera permission is required to take photos", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -57,6 +82,15 @@ class ProfileFragment : Fragment() {
 
         setupSpinners()
         loadUserData()
+        
+        // Restore edit mode state
+        if (isEditMode) {
+            toggleEditMode(true)
+        }
+
+        binding.btnEditProfile.setOnClickListener {
+            toggleEditMode(!isEditMode)
+        }
 
         binding.btnUpdateProfile.setOnClickListener {
             updateUserProfile()
@@ -67,9 +101,11 @@ class ProfileFragment : Fragment() {
         }
 
         binding.btnChangePhotoCamera.setOnClickListener {
-            val photoFile = File(requireContext().cacheDir, "profile_${System.currentTimeMillis()}.jpg")
-            imageUri = FileProvider.getUriForFile(requireContext(), "${requireContext().packageName}.provider", photoFile)
-            takePhoto.launch(imageUri)
+            if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                requestCameraPermission.launch(android.Manifest.permission.CAMERA)
+            } else {
+                launchCamera()
+            }
         }
 
         binding.btnLogout.setOnClickListener {
@@ -131,6 +167,31 @@ class ProfileFragment : Fragment() {
             }
     }
 
+    private fun toggleEditMode(enable: Boolean) {
+        isEditMode = enable
+        
+        binding.tilProfileName.isEnabled = enable
+        binding.tilProfileRollNo.isEnabled = enable
+        binding.tilProfilePhone.isEnabled = enable
+        binding.tilProfileAddress.isEnabled = enable
+        binding.tilProfileBlock.isEnabled = enable
+        binding.tilProfileRoom.isEnabled = enable
+        
+        binding.btnUpdateProfile.visibility = if (enable) View.VISIBLE else View.GONE
+        binding.btnEditProfile.text = if (enable) "Cancel Editing" else "Edit Details"
+        binding.btnEditProfile.setIconResource(if (enable) android.R.drawable.ic_menu_close_clear_cancel else android.R.drawable.ic_menu_edit)
+    }
+
+    private fun launchCamera() {
+        try {
+            val photoFile = File(requireContext().getExternalFilesDir(null), "profile_${System.currentTimeMillis()}.jpg")
+            imageUri = FileProvider.getUriForFile(requireContext(), "${requireContext().packageName}.provider", photoFile)
+            takePhoto.launch(imageUri)
+        } catch (e: Exception) {
+            Toast.makeText(context, "Could not start camera: ${e.message}", Toast.LENGTH_LONG).show()
+        }
+    }
+
     private fun updateUserProfile() {
         val uid = auth.currentUser?.uid ?: return
         val name = binding.etProfileName.text.toString().trim()
@@ -152,7 +213,6 @@ class ProfileFragment : Fragment() {
             "address" to address
         )
 
-        // Only add student fields if they are visible
         if (binding.layoutStudentHostel.visibility == View.VISIBLE) {
             updates["block"] = block
             updates["roomNo"] = roomNo
@@ -161,7 +221,8 @@ class ProfileFragment : Fragment() {
         db.collection("users").document(uid).update(updates)
             .addOnSuccessListener {
                 Toast.makeText(context, "Profile updated successfully", Toast.LENGTH_SHORT).show()
-                loadUserData() // Refresh UI
+                toggleEditMode(false)
+                loadUserData()
             }
             .addOnFailureListener {
                 Toast.makeText(context, "Failed to update profile", Toast.LENGTH_SHORT).show()

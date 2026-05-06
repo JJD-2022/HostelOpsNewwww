@@ -49,12 +49,22 @@
                 app:icon="@android:drawable/ic_menu_gallery" />
         </LinearLayout>
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnEditProfile"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Edit Details"
+            app:icon="@android:drawable/ic_menu_edit" />
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilProfileName"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:enabled="false"
             android:hint="Full Name">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -116,6 +126,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
+                    android:enabled="false"
                     android:hint="Roll No / ID">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -131,6 +142,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
+                    android:enabled="false"
                     android:hint="Phone Number">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -168,10 +180,12 @@
                     android:textColor="@color/md_theme_primary" />
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilProfileAddress"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
+                    android:enabled="false"
                     android:hint="Permanent Address">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -190,11 +204,13 @@
                     android:visibility="gone">
 
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilProfileBlock"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginEnd="8dp"
+                        android:enabled="false"
                         android:hint="Block">
 
                         <AutoCompleteTextView
@@ -205,10 +221,12 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilProfileRoom"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:enabled="false"
                         android:hint="Room No">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -228,6 +246,7 @@
             android:layout_height="56dp"
             android:layout_marginTop="24dp"
             android:text="Save Profile Changes"
+            android:visibility="gone"
             app:cornerRadius="16dp" />
 
         <com.google.android.material.button.MaterialButton

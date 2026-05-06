@@ -1,5 +1,6 @@
 package com.hostelops.ui.student
 
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -26,6 +28,23 @@ class ComplaintFormFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var imageUri: Uri? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState != null) {
+            imageUri = savedInstanceState.getParcelable("image_uri")
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable("image_uri", imageUri)
+        // Save text details
+        outState.putString("category", binding.spinnerCategory.text.toString())
+        outState.putString("block", binding.spinnerBlock.text.toString())
+        outState.putString("roomNo", binding.etRoomNo.text.toString())
+        outState.putString("description", binding.etDescription.text.toString())
+    }
     
     private val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) {
@@ -39,6 +58,14 @@ class ComplaintFormFragment : Fragment() {
         if (success) {
             binding.ivComplaintPhoto.setImageURI(imageUri)
             binding.cardPhoto.visibility = View.VISIBLE
+        }
+    }
+
+    private val requestCameraPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+        if (isGranted) {
+            launchCamera()
+        } else {
+            Toast.makeText(context, "Camera permission is required to take photos", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -58,6 +85,20 @@ class ComplaintFormFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Restore image and text if exists
+        savedInstanceState?.let { bundle ->
+            imageUri = bundle.getParcelable("image_uri")
+            binding.spinnerCategory.setText(bundle.getString("category"), false)
+            binding.spinnerBlock.setText(bundle.getString("block"), false)
+            binding.etRoomNo.setText(bundle.getString("roomNo"))
+            binding.etDescription.setText(bundle.getString("description"))
+        }
+
+        imageUri?.let {
+            binding.ivComplaintPhoto.setImageURI(it)
+            binding.cardPhoto.visibility = View.VISIBLE
+        }
+
         val categories = arrayOf("Plumbing", "Electrical", "Carpentry", "Cleaning", "Others")
         binding.spinnerCategory.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, categories))
 
@@ -69,13 +110,25 @@ class ComplaintFormFragment : Fragment() {
         }
 
         binding.btnCamera.setOnClickListener {
-            val photoFile = File(requireContext().cacheDir, "temp_photo_${System.currentTimeMillis()}.jpg")
-            imageUri = FileProvider.getUriForFile(requireContext(), "${requireContext().packageName}.provider", photoFile)
-            takePhoto.launch(imageUri)
+            if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                requestCameraPermission.launch(android.Manifest.permission.CAMERA)
+            } else {
+                launchCamera()
+            }
         }
 
         binding.btnSubmit.setOnClickListener {
             validateAndSubmit()
+        }
+    }
+
+    private fun launchCamera() {
+        try {
+            val photoFile = File(requireContext().getExternalFilesDir(null), "temp_photo_${System.currentTimeMillis()}.jpg")
+            imageUri = FileProvider.getUriForFile(requireContext(), "${requireContext().packageName}.provider", photoFile)
+            takePhoto.launch(imageUri)
+        } catch (e: Exception) {
+            Toast.makeText(context, "Could not start camera: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -147,7 +200,7 @@ class ComplaintFormFragment : Fragment() {
         db.collection("complaints").document(complaintId).set(complaint)
             .addOnSuccessListener {
                 createNotificationForStaff(category, "$block - $roomNo")
-                Toast.makeText(context, "Complaint posted successfully!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext().applicationContext, "Complaint posted successfully!", Toast.LENGTH_LONG).show()
                 findNavController().popBackStack()
             }
             .addOnFailureListener {

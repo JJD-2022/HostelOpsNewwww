@@ -20,6 +20,7 @@ object CloudinaryHelper {
 
     fun uploadImage(context: Context, uri: Uri, callback: UploadCallback) {
         MediaManager.get().upload(uri)
+            .unsigned("kkkae34a") // Use the same unsigned preset as ComplaintForm
             .option("folder", "profile_pictures")
             .callback(callback)
             .dispatch()

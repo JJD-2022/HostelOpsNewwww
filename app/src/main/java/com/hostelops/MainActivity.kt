@@ -159,29 +159,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupListener(uid: String, role: String?) {
+        // Listen for new notifications added after the app session started
+        val startTime = com.google.firebase.Timestamp.now()
         val query = db.collection("notifications")
+            .whereGreaterThan("timestamp", startTime)
             .orderBy("timestamp", Query.Direction.DESCENDING)
-            .limit(1)
 
         notificationListener = query.addSnapshotListener { snapshots, e ->
             if (e != null || snapshots == null) return@addSnapshotListener
             
             for (dc in snapshots.documentChanges) {
                 if (dc.type == DocumentChange.Type.ADDED) {
-                    val targetUid = dc.document.getString("targetUid")
-                    val targetRole = dc.document.getString("targetRole")
-                    val title = dc.document.getString("title") ?: "HostelOps"
-                    val message = dc.document.getString("message") ?: ""
-                    
-                    // Priority Check (Optional: highlight urgent notifications)
-                    val isUrgent = title.contains("Urgent", ignoreCase = true) || message.contains("Escalated", ignoreCase = true)
+                    val notif = dc.document.toObject(com.hostelops.models.Notification::class.java)
                     
                     // Trigger if it's for me
-                    if (targetUid == uid || (targetRole != null && targetRole == role)) {
-                        val timestamp = dc.document.getTimestamp("timestamp")
-                        if (timestamp != null && (System.currentTimeMillis() - timestamp.toDate().time) < 15000) {
-                            showLocalNotification(title, message, isUrgent)
-                        }
+                    if (notif.targetUid == uid || (notif.targetRole != null && notif.targetRole == role)) {
+                        showLocalNotification(notif.title, notif.message, notif.title.contains("Urgent", true))
                     }
                 }
             }

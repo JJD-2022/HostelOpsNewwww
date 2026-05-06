@@ -29,6 +29,8 @@
     <!-- Error -->
     <color name="md_theme_error">#ba1a1a</color>
     <color name="md_theme_onError">#ffffff</color>
+    <color name="md_theme_errorContainer">#ffdad6</color>
+    <color name="md_theme_onErrorContainer">#410002</color>
 
     <!-- Role Specific (kept for backward compatibility or special highlights) -->
     <color name="student_blue">#006495</color>
