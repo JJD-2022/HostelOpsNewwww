@@ -42,28 +42,35 @@ class ComplaintDetailFragment : Fragment() {
     }
 
     private fun loadComplaintDetails(complaintId: String) {
-        db.collection("complaints").document(complaintId).get()
-            .addOnSuccessListener { document ->
-                val complaint = document.toObject(Complaint::class.java)
-                if (complaint != null) {
-                    displayComplaint(complaint)
-                    checkUserRoleAndShowActions(complaint)
-                }
+        db.collection("complaints").document(complaintId).addSnapshotListener { document, _ ->
+            val complaint = document?.toObject(Complaint::class.java)
+            if (complaint != null) {
+                displayComplaint(complaint)
+                checkUserRoleAndShowActions(complaint)
             }
+        }
     }
 
     private fun displayComplaint(complaint: Complaint) {
         binding.tvCategory.text = complaint.category
         binding.tvDescription.text = complaint.description
-        binding.tvLocation.text = complaint.location
+        binding.tvLocation.text = "${complaint.block}, Room ${complaint.roomNo}"
         binding.tvStatus.text = complaint.status
         
-        val sdf = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
+        binding.tvStudentName.text = complaint.studentName
+        binding.tvStudentContact.text = "${complaint.studentEmail} | ${complaint.studentPhone}"
+        
+        val sdf = SimpleDateFormat("dd.MM.yyyy, h:mm a", Locale.getDefault())
         binding.tvTimestamp.text = "Submitted on: ${sdf.format(complaint.timestamp.toDate())}"
 
-        binding.ivComplaintPhoto.load(complaint.photoUrl) {
-            placeholder(R.drawable.ic_profile_placeholder)
-            crossfade(true)
+        if (complaint.photoUrl.isNotEmpty()) {
+            binding.cardPhoto.visibility = View.VISIBLE
+            binding.ivComplaintPhoto.load(complaint.photoUrl) {
+                placeholder(R.drawable.ic_profile_placeholder)
+                crossfade(true)
+            }
+        } else {
+            binding.cardPhoto.visibility = View.GONE
         }
 
         when (complaint.status) {
@@ -96,7 +103,6 @@ class ComplaintDetailFragment : Fragment() {
         }
 
         binding.btnResolve.setOnClickListener {
-            // For now, just mark resolved. In a real app, we'd open a dialog to upload a photo.
             updateStatus(complaint.id, "RESOLVED")
         }
     }
@@ -105,7 +111,23 @@ class ComplaintDetailFragment : Fragment() {
         db.collection("complaints").document(id).update("status", status)
             .addOnSuccessListener {
                 Toast.makeText(context, "Status updated to $status", Toast.LENGTH_SHORT).show()
-                loadComplaintDetails(id)
+                createNotificationForStudent(id, status)
+            }
+    }
+
+    private fun createNotificationForStudent(complaintId: String, status: String) {
+        db.collection("complaints").document(complaintId).get()
+            .addOnSuccessListener { document ->
+                val studentId = document.getString("studentId") ?: return@addOnSuccessListener
+                val category = document.getString("category") ?: "Complaint"
+                
+                val notification = hashMapOf(
+                    "title" to "Update: $category",
+                    "message" to "Your complaint status is now: $status",
+                    "targetUid" to studentId,
+                    "timestamp" to com.google.firebase.Timestamp.now()
+                )
+                db.collection("notifications").add(notification)
             }
     }
 

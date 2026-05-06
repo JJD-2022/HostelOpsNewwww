@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -61,9 +62,13 @@ class SignupFragment : Fragment() {
 
         binding.tvSignupTitle.text = "Signup as ${args.role}"
         
-        // Adjust labels based on role
         if (args.role != "STUDENT") {
             binding.tilRollNo.hint = "Employee ID"
+            binding.layoutStudentFields.visibility = View.GONE
+        } else {
+            binding.layoutStudentFields.visibility = View.VISIBLE
+            val blocks = arrayOf("N Block", "Q Block", "R Block", "S Block", "T Block")
+            binding.spinnerBlock.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, blocks))
         }
 
         binding.btnSignup.setOnClickListener {
@@ -73,9 +78,22 @@ class SignupFragment : Fragment() {
             val phone = binding.etPhone.text.toString().trim()
             val address = binding.etAddress.text.toString().trim()
             val password = binding.etPassword.text.toString().trim()
+            val block = binding.spinnerBlock.text.toString()
+            val roomNo = binding.etRoomNo.text.toString().trim()
 
             if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(context, "Name, Email and Password are required", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Strict Institutional Email Enforcement
+            if (!email.endsWith("@psgtech.ac.in")) {
+                Toast.makeText(context, "Only @psgtech.ac.in emails are allowed", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (args.role == "STUDENT" && (block.isEmpty() || roomNo.isEmpty())) {
+                Toast.makeText(context, "Block and Room No are required for students", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -90,7 +108,9 @@ class SignupFragment : Fragment() {
                             name = name,
                             rollNo = rollNo,
                             phone = phone,
-                            address = address
+                            address = address,
+                            block = block,
+                            roomNo = roomNo
                         )
                     }
                 }
@@ -115,7 +135,6 @@ class SignupFragment : Fragment() {
             .addOnSuccessListener {
                 val user = it.user
                 if (user != null) {
-                    // Pre-fill from Google account
                     saveUserToFirestore(
                         uid = user.uid,
                         email = user.email ?: "",
@@ -123,7 +142,9 @@ class SignupFragment : Fragment() {
                         name = user.displayName ?: "",
                         rollNo = "",
                         phone = user.phoneNumber ?: "",
-                        address = ""
+                        address = "",
+                        block = "",
+                        roomNo = ""
                     )
                 }
             }
@@ -139,7 +160,9 @@ class SignupFragment : Fragment() {
         name: String,
         rollNo: String,
         phone: String,
-        address: String
+        address: String,
+        block: String,
+        roomNo: String
     ) {
         val userMap = hashMapOf(
             "uid" to uid,
@@ -148,7 +171,9 @@ class SignupFragment : Fragment() {
             "name" to name,
             "rollNo" to rollNo,
             "phone" to phone,
-            "address" to address
+            "address" to address,
+            "block" to block,
+            "roomNo" to roomNo
         )
 
         db.collection("users").document(uid).set(userMap)

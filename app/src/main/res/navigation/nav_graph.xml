@@ -127,7 +127,16 @@
         <action
             android:id="@+id/action_adminDashboardFragment_to_complaintDetailFragment"
             app:destination="@id/complaintDetailFragment" />
+        <action
+            android:id="@+id/action_adminDashboardFragment_to_adminUsersFragment"
+            app:destination="@id/adminUsersFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/adminUsersFragment"
+        android:name="com.hostelops.ui.admin.AdminUsersFragment"
+        android:label="Manage Users"
+        tools:layout="@layout/fragment_admin_users" />
 
     <fragment
         android:id="@+id/profileFragment"

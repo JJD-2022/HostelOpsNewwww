@@ -25,10 +25,25 @@ class ComplaintAdapter(
         val complaint = complaints[position]
         holder.binding.tvCategory.text = complaint.category
         holder.binding.tvDescription.text = complaint.description
-        holder.binding.tvLocation.text = complaint.location
+        holder.binding.tvLocation.text = "${complaint.block} - ${complaint.roomNo}"
         holder.binding.tvStatus.text = complaint.status
         
-        val sdf = SimpleDateFormat("dd MMM, HH:mm", Locale.getDefault())
+        holder.binding.tvStudentInfo.text = "By: ${complaint.studentName} (${complaint.studentPhone})"
+
+        // Priority/Escalation Highlighting
+        val isEscalated = complaint.status != "RESOLVED" && 
+                (System.currentTimeMillis() - complaint.timestamp.toDate().time) > 86400000 // 24 hours
+        
+        if (isEscalated) {
+            holder.binding.tvStatus.text = "URGENT / ESCALATED"
+            holder.binding.cardComplaint.strokeColor = holder.binding.cardComplaint.context.getColor(R.color.md_theme_error)
+            holder.binding.cardComplaint.strokeWidth = 6
+        } else {
+            holder.binding.cardComplaint.strokeColor = holder.binding.cardComplaint.context.getColor(R.color.md_theme_surfaceVariant)
+            holder.binding.cardComplaint.strokeWidth = 2
+        }
+
+        val sdf = SimpleDateFormat("dd.MM.yyyy, h:mm a", Locale.getDefault())
         holder.binding.tvTimestamp.text = sdf.format(complaint.timestamp.toDate())
 
         when (complaint.status) {

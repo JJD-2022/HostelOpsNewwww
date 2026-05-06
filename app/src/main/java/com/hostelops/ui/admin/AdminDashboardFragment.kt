@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.hostelops.R
 import com.hostelops.databinding.FragmentAdminDashboardBinding
 import com.hostelops.models.Complaint
 import com.hostelops.ui.student.ComplaintAdapter
@@ -35,23 +36,32 @@ class AdminDashboardFragment : Fragment() {
         binding.rvAdminRecent.layoutManager = LinearLayoutManager(context)
         loadStats()
         loadRecentComplaints()
+        
+        binding.cardManageUsers.setOnClickListener {
+            findNavController().navigate(R.id.action_adminDashboardFragment_to_adminUsersFragment)
+        }
     }
 
     private fun loadStats() {
-        db.collection("complaints").get()
-            .addOnSuccessListener { querySnapshot ->
-                val total = querySnapshot.size()
-                val resolved = querySnapshot.documents.count { it.getString("status") == "RESOLVED" }
-                
-                binding.tvTotalComplaints.text = total.toString()
-                binding.tvResolvedComplaints.text = resolved.toString()
-            }
+        db.collection("complaints").addSnapshotListener { querySnapshot, _ ->
+            if (querySnapshot == null) return@addSnapshotListener
+            
+            val total = querySnapshot.size()
+            val resolved = querySnapshot.documents.count { it.getString("status") == "RESOLVED" }
+            val inProgress = querySnapshot.documents.count { it.getString("status") == "IN_PROGRESS" }
+            val pending = total - resolved - inProgress
+            
+            binding.tvTotalComplaints.text = total.toString()
+            binding.tvResolvedComplaints.text = resolved.toString()
+            binding.tvInProgress.text = inProgress.toString()
+            binding.tvPendingComplaints.text = pending.toString()
+        }
     }
 
     private fun loadRecentComplaints() {
         db.collection("complaints")
             .orderBy("timestamp", Query.Direction.DESCENDING)
-            .limit(10)
+            .limit(15)
             .addSnapshotListener { value, error ->
                 if (error != null) return@addSnapshotListener
                 val complaints = value?.toObjects(Complaint::class.java) ?: emptyList()

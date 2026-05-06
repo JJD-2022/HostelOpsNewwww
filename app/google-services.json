@@ -12,7 +12,12 @@
           "package_name": "com.hostelops"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "221608131480-f2rnnl391dp7htpilik6vh5lp61md936.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyC1htP-RxeSmYgSSY-W9coQOdaXlsihfMw"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "221608131480-f2rnnl391dp7htpilik6vh5lp61md936.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
