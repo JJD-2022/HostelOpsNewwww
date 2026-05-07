@@ -47,6 +47,20 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/tvDuplicateFlag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_status_not_seen"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="4dp"
+            android:text="DUPLICATE COMPLAINT"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <TextView
             android:id="@+id/tvTimestamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

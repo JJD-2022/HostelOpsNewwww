@@ -1,6 +1,7 @@
 package com.hostelops.ui.student
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hostelops.R
@@ -29,6 +30,8 @@ class ComplaintAdapter(
         holder.binding.tvStatus.text = complaint.status
         
         holder.binding.tvStudentInfo.text = "By: ${complaint.studentName} (${complaint.studentPhone})"
+        
+        holder.binding.tvDuplicate.visibility = if (complaint.isDuplicate) View.VISIBLE else View.GONE
 
         // Priority/Escalation Highlighting
         val isEscalated = complaint.status != "RESOLVED" && 

@@ -60,6 +60,8 @@ class ComplaintDetailFragment : Fragment() {
         binding.tvLocation.text = "${complaint.block}, Room ${complaint.roomNo}"
         binding.tvStatus.text = complaint.status
         
+        binding.tvDuplicateFlag.visibility = if (complaint.isDuplicate) View.VISIBLE else View.GONE
+
         binding.tvStudentName.text = complaint.studentName
         binding.tvStudentContact.text = "${complaint.studentEmail} | ${complaint.studentPhone}"
         

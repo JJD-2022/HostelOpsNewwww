@@ -76,6 +76,7 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
         
         binding.navigationView.setupWithNavController(navController)
+        binding.bottomNavigation.setupWithNavController(navController)
         
         binding.toolbar.setNavigationOnClickListener {
             binding.drawerLayout.openDrawer(GravityCompat.START)
@@ -101,10 +102,12 @@ class MainActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.roleSelectionFragment, R.id.loginFragment, R.id.signupFragment -> {
                     binding.appBarLayout.visibility = View.GONE
+                    binding.bottomNavigation.visibility = View.GONE
                     stopNotificationListener()
                 }
                 else -> {
                     binding.appBarLayout.visibility = View.VISIBLE
+                    binding.bottomNavigation.visibility = View.VISIBLE
                     updateProfileIcon()
                     startNotificationListener()
                 }
@@ -151,10 +154,20 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateNavigationMenu(role: String?) {
         binding.navigationView.menu.clear()
+        binding.bottomNavigation.menu.clear()
         when (role?.uppercase()) {
-            "STUDENT" -> binding.navigationView.inflateMenu(R.menu.menu_student_drawer)
-            "STAFF" -> binding.navigationView.inflateMenu(R.menu.menu_staff_drawer)
-            "ADMIN" -> binding.navigationView.inflateMenu(R.menu.menu_admin_drawer)
+            "STUDENT" -> {
+                binding.navigationView.inflateMenu(R.menu.menu_student_drawer)
+                binding.bottomNavigation.inflateMenu(R.menu.menu_bottom_nav_student)
+            }
+            "STAFF" -> {
+                binding.navigationView.inflateMenu(R.menu.menu_staff_drawer)
+                binding.bottomNavigation.inflateMenu(R.menu.menu_bottom_nav_staff)
+            }
+            "ADMIN" -> {
+                binding.navigationView.inflateMenu(R.menu.menu_admin_drawer)
+                binding.bottomNavigation.inflateMenu(R.menu.menu_bottom_nav_admin)
+            }
         }
     }
 

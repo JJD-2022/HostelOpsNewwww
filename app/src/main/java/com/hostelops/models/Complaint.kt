@@ -17,5 +17,6 @@ data class Complaint(
     val timestamp: Timestamp = Timestamp.now(),
     val resolutionPhotoUrl: String = "",
     val staffRemarks: String = "",
-    val resolvedAt: Timestamp? = null
+    val resolvedAt: Timestamp? = null,
+    val isDuplicate: Boolean = false
 )

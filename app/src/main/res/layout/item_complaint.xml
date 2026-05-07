@@ -40,6 +40,22 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/tvDuplicate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/bg_status_not_seen"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="2dp"
+            android:text="DUPLICATE"
+            android:textColor="@color/white"
+            android:textSize="9sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvStatus" />
+
+        <TextView
             android:id="@+id/tvStudentInfo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

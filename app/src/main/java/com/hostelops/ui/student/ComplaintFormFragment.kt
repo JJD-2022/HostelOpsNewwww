@@ -147,15 +147,54 @@ class ComplaintFormFragment : Fragment() {
 
         // Fetch current user details first to ensure the complaint has all info
         val uid = auth.currentUser?.uid ?: return
+
+        // Duplicate detection logic
+        db.collection("complaints")
+            .whereEqualTo("studentId", uid)
+            .whereEqualTo("category", category)
+            .whereEqualTo("description", description)
+            .get()
+            .addOnSuccessListener { documents ->
+                var isDayDuplicate = false
+                var isFiveDayDuplicate = false
+                val now = System.currentTimeMillis()
+                val oneDayMillis = 24 * 60 * 60 * 1000L
+                val fiveDaysMillis = 5 * oneDayMillis
+
+                for (doc in documents) {
+                    val timestamp = doc.getTimestamp("timestamp")?.toDate()?.time ?: 0L
+                    val diff = now - timestamp
+                    if (diff < oneDayMillis) {
+                        isDayDuplicate = true
+                        break
+                    } else if (diff < fiveDaysMillis) {
+                        isFiveDayDuplicate = true
+                    }
+                }
+
+                if (isDayDuplicate) {
+                    Toast.makeText(context, "Duplicate complaint detected! You have already filed this complaint today. Please avoid redundant entries.", Toast.LENGTH_LONG).show()
+                    binding.btnSubmit.isEnabled = true
+                } else {
+                    proceedWithSubmission(category, block, roomNo, description, uid, isFiveDayDuplicate)
+                }
+            }
+            .addOnFailureListener {
+                // If check fails, we proceed without flagging to avoid blocking valid users
+                proceedWithSubmission(category, block, roomNo, description, uid, false)
+            }
+    }
+
+    private fun proceedWithSubmission(category: String, block: String, roomNo: String, description: String, uid: String, isDuplicate: Boolean) {
         db.collection("users").document(uid).get().addOnSuccessListener { document ->
             val name = document.getString("name") ?: "Unknown"
             val phone = document.getString("phone") ?: "N/A"
             val email = document.getString("email") ?: ""
 
             if (imageUri != null) {
-                uploadImageAndSave(category, block, roomNo, description, name, phone, email)
+                uploadImageAndSave(category, block, roomNo, description, name, phone, email, isDuplicate)
             } else {
-                saveComplaintToFirestore(category, block, roomNo, description, name, phone, email, "")
+                saveComplaintToFirestore(category, block, roomNo, description, name, phone, email, "", isDuplicate)
             }
         }.addOnFailureListener {
             binding.btnSubmit.isEnabled = true
@@ -163,15 +202,15 @@ class ComplaintFormFragment : Fragment() {
         }
     }
 
-    private fun uploadImageAndSave(category: String, block: String, roomNo: String, description: String, name: String, phone: String, email: String) {
+    private fun uploadImageAndSave(category: String, block: String, roomNo: String, description: String, name: String, phone: String, email: String, isDuplicate: Boolean) {
         MediaManager.get().upload(imageUri)
             .unsigned("kkkae34a") 
             .callback(object : UploadCallback {
                 override fun onStart(requestId: String) {}
                 override fun onProgress(requestId: String, bytes: Long, totalBytes: Long) {}
                 override fun onSuccess(requestId: String, resultData: Map<*, *>) {
-                    val photoUrl = resultData["secure_url"] as String
-                    saveComplaintToFirestore(category, block, roomNo, description, name, phone, email, photoUrl)
+                    val uploadedPhotoUrl = resultData["secure_url"] as String
+                    saveComplaintToFirestore(category, block, roomNo, description, name, phone, email, uploadedPhotoUrl, isDuplicate)
                 }
                 override fun onError(requestId: String, error: ErrorInfo) {
                     binding.btnSubmit.isEnabled = true
@@ -181,7 +220,7 @@ class ComplaintFormFragment : Fragment() {
             }).dispatch()
     }
 
-    private fun saveComplaintToFirestore(category: String, block: String, roomNo: String, description: String, name: String, phone: String, email: String, photoUrl: String) {
+    private fun saveComplaintToFirestore(category: String, block: String, roomNo: String, description: String, name: String, phone: String, email: String, photoUrl: String, isDuplicate: Boolean) {
         val complaintId = db.collection("complaints").document().id
         
         val complaint = Complaint(
@@ -194,7 +233,8 @@ class ComplaintFormFragment : Fragment() {
             block = block,
             roomNo = roomNo,
             description = description,
-            photoUrl = photoUrl
+            photoUrl = photoUrl,
+            isDuplicate = isDuplicate
         )
 
         db.collection("complaints").document(complaintId).set(complaint)
