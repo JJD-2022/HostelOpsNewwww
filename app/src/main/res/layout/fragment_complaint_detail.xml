@@ -54,7 +54,7 @@
             android:background="@drawable/bg_status_not_seen"
             android:paddingHorizontal="12dp"
             android:paddingVertical="4dp"
-            android:text="DUPLICATE COMPLAINT"
+            android:text="@string/duplicate_complaint"
             android:textColor="@color/white"
             android:textSize="12sp"
             android:textStyle="bold"

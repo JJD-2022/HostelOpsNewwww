@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="System Overview"
+            android:text="@string/system_overview"
             android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
             android:textColor="@color/md_theme_primary"
             android:textStyle="bold" />
@@ -57,7 +57,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Total Cases"
+                        android:text="@string/total_cases"
                         android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
                         android:textColor="@color/md_theme_onSurfaceVariant" />
                 </LinearLayout>
@@ -92,7 +92,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Pending"
+                        android:text="@string/pending"
                         android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
                         android:textColor="@color/md_theme_onSurfaceVariant" />
                 </LinearLayout>
@@ -127,7 +127,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="In Progress"
+                        android:text="@string/in_progress"
                         android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
                         android:textColor="@color/md_theme_onSurfaceVariant" />
                 </LinearLayout>
@@ -162,7 +162,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Resolved"
+                        android:text="@string/resolved"
                         android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
                         android:textColor="@color/md_theme_onSurfaceVariant" />
                 </LinearLayout>
@@ -198,7 +198,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Analytics"
+                        android:text="@string/analytics"
                         android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                         android:textColor="@color/md_theme_secondary"
                         android:textStyle="bold" />
@@ -235,9 +235,46 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Reports"
+                        android:text="@string/reports"
                         android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                         android:textColor="@color/md_theme_tertiary"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardManageUsers"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_margin="4dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/md_theme_primary"
+                app:strokeWidth="1dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@android:drawable/ic_menu_myplaces"
+                        app:tint="@color/md_theme_primary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/manage_users"
+                        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                        android:textColor="@color/md_theme_primary"
                         android:textStyle="bold" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -249,7 +286,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:layout_marginBottom="16dp"
-            android:text="Recent Global Activity"
+            android:text="@string/recent_global_activity"
             android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
             android:textStyle="bold" />
 

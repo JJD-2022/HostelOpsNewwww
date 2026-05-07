@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="System Reports"
+            android:text="@string/system_reports"
             android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
             android:textStyle="bold" />
 
@@ -37,7 +37,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Average Resolution Time"
+                    android:text="@string/avg_resolution_time"
                     android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                     android:textColor="@color/md_theme_primary" />
 
@@ -46,7 +46,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Calculating..."
+                    android:text="@string/calculating"
                     android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
                     android:textStyle="bold" />
 
@@ -57,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="Resolved by Category"
+            android:text="@string/resolved_by_category"
             android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
             android:textStyle="bold" />
 

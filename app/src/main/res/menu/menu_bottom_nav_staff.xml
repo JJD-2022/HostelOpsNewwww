@@ -3,17 +3,17 @@
     <item
         android:id="@+id/staffDashboardFragment"
         android:icon="@android:drawable/ic_menu_today"
-        android:title="Feed" />
+        android:title="@string/nav_feed" />
     <item
         android:id="@+id/assignedComplaintsFragment"
         android:icon="@android:drawable/ic_menu_agenda"
-        android:title="Assigned" />
+        android:title="@string/nav_assigned" />
     <item
         android:id="@+id/inProgressTasksFragment"
         android:icon="@android:drawable/ic_menu_rotate"
-        android:title="Active" />
+        android:title="@string/nav_active" />
     <item
         android:id="@+id/completedTasksFragment"
         android:icon="@android:drawable/ic_menu_save"
-        android:title="Done" />
+        android:title="@string/nav_done" />
 </menu>

@@ -40,6 +40,14 @@ class AdminDashboardFragment : Fragment() {
         binding.cardManageUsers.setOnClickListener {
             findNavController().navigate(R.id.action_adminDashboardFragment_to_adminUsersFragment)
         }
+
+        binding.cardAnalytics.setOnClickListener {
+            findNavController().navigate(R.id.analyticsFragment)
+        }
+
+        binding.cardReports.setOnClickListener {
+            findNavController().navigate(R.id.reportsFragment)
+        }
     }
 
     private fun loadStats() {

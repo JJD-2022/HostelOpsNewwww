@@ -3,17 +3,17 @@
     <item
         android:id="@+id/studentDashboardFragment"
         android:icon="@android:drawable/ic_menu_today"
-        android:title="Home" />
+        android:title="@string/nav_home" />
     <item
         android:id="@+id/myComplaintsFragment"
         android:icon="@android:drawable/ic_menu_sort_by_size"
-        android:title="Complaints" />
+        android:title="@string/nav_complaints" />
     <item
         android:id="@+id/complaintFormFragment"
         android:icon="@android:drawable/ic_menu_add"
-        android:title="Add" />
+        android:title="@string/nav_add" />
     <item
         android:id="@+id/notificationsFragment"
         android:icon="@android:drawable/ic_popup_reminder"
-        android:title="Alerts" />
+        android:title="@string/nav_alerts" />
 </menu>

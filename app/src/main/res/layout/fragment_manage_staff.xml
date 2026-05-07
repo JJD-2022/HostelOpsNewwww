@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="Staff Management"
+            android:text="@string/staff_management"
             android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
             android:textStyle="bold" />
 
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="No staff members found."
+            android:text="@string/no_staff_found"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
             android:visibility="gone" />
 
@@ -46,6 +46,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="24dp"
         android:src="@android:drawable/ic_input_add"
+        android:contentDescription="@string/add_staff"
         app:tint="@color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

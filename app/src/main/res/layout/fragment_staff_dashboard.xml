@@ -231,130 +231,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Staff Tools"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                android:textStyle="bold" />
-
-            <GridLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:columnCount="4">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
-                        app:cardCornerRadius="28dp"
-                        app:cardElevation="0dp"
-                        app:cardBackgroundColor="@color/md_theme_primaryContainer">
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_gravity="center"
-                            android:src="@android:drawable/ic_menu_agenda"
-                            app:tint="@color/md_theme_primary" />
-                    </com.google.android.material.card.MaterialCardView>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Attendance"
-                        android:textAppearance="@style/TextAppearance.Material3.LabelSmall" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
-                        app:cardCornerRadius="28dp"
-                        app:cardElevation="0dp"
-                        app:cardBackgroundColor="@color/md_theme_secondaryContainer">
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_gravity="center"
-                            android:src="@android:drawable/ic_menu_save"
-                            app:tint="@color/md_theme_secondary" />
-                    </com.google.android.material.card.MaterialCardView>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Inventory"
-                        android:textAppearance="@style/TextAppearance.Material3.LabelSmall" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
-                        app:cardCornerRadius="28dp"
-                        app:cardElevation="0dp"
-                        app:cardBackgroundColor="@color/md_theme_tertiaryContainer">
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_gravity="center"
-                            android:src="@android:drawable/ic_menu_my_calendar"
-                            app:tint="@color/md_theme_tertiary" />
-                    </com.google.android.material.card.MaterialCardView>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Leaves"
-                        android:textAppearance="@style/TextAppearance.Material3.LabelSmall" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
-                        app:cardCornerRadius="28dp"
-                        app:cardElevation="0dp"
-                        app:cardBackgroundColor="@color/md_theme_errorContainer">
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_gravity="center"
-                            android:src="@android:drawable/ic_menu_edit"
-                            app:tint="@color/md_theme_error" />
-                    </com.google.android.material.card.MaterialCardView>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Logs"
-                        android:textAppearance="@style/TextAppearance.Material3.LabelSmall" />
-                </LinearLayout>
-
-            </GridLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
                 android:text="Work List"
                 android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
                 android:textStyle="bold" />
@@ -373,7 +249,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:gravity="center"
-                android:text="Good job! No pending complaints in this category."
+                android:text="@string/no_complaints_staff"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                 android:visibility="gone" />
 

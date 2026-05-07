@@ -32,7 +32,7 @@
                         android:id="@+id/toolbarTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="HostelOps"
+                        android:text="@string/app_name"
                         android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"

@@ -16,7 +16,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="System Performance"
+            android:text="@string/system_performance"
             android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
             android:textStyle="bold" />
 
@@ -38,7 +38,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Resolution Rate"
+                    android:text="@string/resolution_rate"
                     android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                     android:textColor="@color/md_theme_primary" />
 
@@ -66,7 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="Complaints by Category"
+            android:text="@string/complaints_by_category"
             android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
             android:textStyle="bold" />
 
@@ -92,7 +92,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="User Distribution"
+            android:text="@string/user_distribution"
             android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
             android:textStyle="bold" />
 
@@ -127,7 +127,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Students"
+                        android:text="@string/students_title"
                         android:textAppearance="@style/TextAppearance.Material3.LabelSmall" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -157,7 +157,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Staff"
+                        android:text="@string/staff_title"
                         android:textAppearance="@style/TextAppearance.Material3.LabelSmall" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

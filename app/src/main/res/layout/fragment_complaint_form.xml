@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginEnd="8dp"
-                android:hint="Block">
+                android:hint="@string/block">
 
                 <AutoCompleteTextView
                     android:id="@+id/spinnerBlock"
@@ -53,7 +53,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Room No">
+                android:hint="@string/room_no">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etRoomNo"
@@ -82,7 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="Add Photo (Optional)"
+            android:text="@string/add_photo_optional"
             android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
             android:textColor="@color/md_theme_primary" />
 
@@ -99,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginEnd="8dp"
-                android:text="Camera"
+                android:text="@string/camera"
                 app:icon="@android:drawable/ic_menu_camera" />
 
             <com.google.android.material.button.MaterialButton
@@ -108,7 +108,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Gallery"
+                android:text="@string/gallery"
                 app:icon="@android:drawable/ic_menu_gallery" />
         </LinearLayout>
 
@@ -135,7 +135,7 @@
             android:id="@+id/btnSubmit"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:text="Post Complaint"
+            android:text="@string/post_complaint"
             app:cornerRadius="16dp" />
 
     </LinearLayout>
