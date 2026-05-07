@@ -60,12 +60,15 @@ class AdminDashboardFragment : Fragment() {
 
     private fun loadRecentComplaints() {
         db.collection("complaints")
-            .orderBy("timestamp", Query.Direction.DESCENDING)
-            .limit(15)
+            .limit(50)
             .addSnapshotListener { value, error ->
-                if (error != null) return@addSnapshotListener
+                if (_binding == null || error != null) return@addSnapshotListener
                 val complaints = value?.toObjects(Complaint::class.java) ?: emptyList()
-                binding.rvAdminRecent.adapter = ComplaintAdapter(complaints) { complaint ->
+                
+                // Sort in memory to avoid index requirement
+                val sorted = complaints.sortedByDescending { it.timestamp }.take(15)
+                
+                binding.rvAdminRecent.adapter = ComplaintAdapter(sorted) { complaint ->
                     val action = AdminDashboardFragmentDirections.actionAdminDashboardFragmentToComplaintDetailFragment(complaint.id)
                     findNavController().navigate(action)
                 }

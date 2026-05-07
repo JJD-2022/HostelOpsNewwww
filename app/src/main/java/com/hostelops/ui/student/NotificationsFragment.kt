@@ -35,20 +35,22 @@ class NotificationsFragment : Fragment() {
     private fun loadNotifications() {
         val user = auth.currentUser ?: return
         
-        // Listen to notifications collection directly
-        db.collection("notifications")
-            .orderBy("timestamp", Query.Direction.DESCENDING)
-            .addSnapshotListener { value, error ->
-                if (error != null) return@addSnapshotListener
-                val allNotifications = value?.toObjects(Notification::class.java) ?: emptyList()
-                
-                // Fetch user role to filter
-                db.collection("users").document(user.uid).get().addOnSuccessListener { doc ->
-                    val role = doc.getString("role")
+        // Fetch user role to filter
+        db.collection("users").document(user.uid).get().addOnSuccessListener { userDoc ->
+            val role = userDoc.getString("role")
+            
+            db.collection("notifications")
+                .addSnapshotListener { value, error ->
+                    if (_binding == null || error != null) return@addSnapshotListener
                     
-                    val filtered = allNotifications.filter { notif ->
-                        notif.targetUid == user.uid || (notif.targetRole != null && notif.targetRole == role)
-                    }
+                    val allNotifications = value?.toObjects(Notification::class.java) ?: emptyList()
+                    
+                    // Sort in memory to avoid index requirement
+                    val filtered = allNotifications
+                        .filter { notif ->
+                            notif.targetUid == user.uid || (notif.targetRole != null && notif.targetRole == role)
+                        }
+                        .sortedByDescending { it.timestamp }
 
                     if (filtered.isEmpty()) {
                         binding.tvEmptyNotifications.visibility = View.VISIBLE
@@ -59,7 +61,7 @@ class NotificationsFragment : Fragment() {
                         binding.rvNotifications.adapter = NotificationAdapter(filtered)
                     }
                 }
-            }
+        }
     }
 
     override fun onDestroyView() {

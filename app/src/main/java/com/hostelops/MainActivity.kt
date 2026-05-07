@@ -159,11 +159,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupListener(uid: String, role: String?) {
-        // Listen for new notifications added after the app session started
-        val startTime = com.google.firebase.Timestamp.now()
+        val startTime = System.currentTimeMillis()
+        // No orderBy to avoid index requirement, we'll filter in code
         val query = db.collection("notifications")
-            .whereGreaterThan("timestamp", startTime)
-            .orderBy("timestamp", Query.Direction.DESCENDING)
 
         notificationListener = query.addSnapshotListener { snapshots, e ->
             if (e != null || snapshots == null) return@addSnapshotListener
@@ -172,9 +170,11 @@ class MainActivity : AppCompatActivity() {
                 if (dc.type == DocumentChange.Type.ADDED) {
                     val notif = dc.document.toObject(com.hostelops.models.Notification::class.java)
                     
-                    // Trigger if it's for me
-                    if (notif.targetUid == uid || (notif.targetRole != null && notif.targetRole == role)) {
-                        showLocalNotification(notif.title, notif.message, notif.title.contains("Urgent", true))
+                    // Only show if it's NEW (added after app session started)
+                    if (notif.timestamp.toDate().time > (startTime - 5000)) {
+                        if (notif.targetUid == uid || (notif.targetRole != null && notif.targetRole == role)) {
+                            showLocalNotification(notif.title, notif.message, notif.title.contains("Urgent", true))
+                        }
                     }
                 }
             }

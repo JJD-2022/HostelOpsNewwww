@@ -175,8 +175,8 @@ class ComplaintDetailFragment : Fragment() {
                 
                 // Admin Notification
                 val adminNotification = hashMapOf(
-                    "title" to "Complaint Resolved: $category",
-                    "message" to "A complaint has been resolved by staff.",
+                    "title" to "Complaint $status: $category",
+                    "message" to "A complaint status has been updated to $status by staff.",
                     "targetRole" to "ADMIN",
                     "timestamp" to com.google.firebase.Timestamp.now()
                 )

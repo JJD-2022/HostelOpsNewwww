@@ -36,20 +36,27 @@ class ReportsFragment : Fragment() {
     }
 
     private fun calculateResolutionTime(complaints: List<Complaint>) {
-        val resolvedComplaints = complaints.filter { (it.status == "RESOLVED" || it.status == "COMPLETED") && it.resolvedAt != null }
+        val resolvedComplaints = complaints.filter { it.status == "RESOLVED" || it.status == "COMPLETED" }
         
         if (resolvedComplaints.isEmpty()) {
             binding.tvAvgResolutionTime.text = "No resolved cases yet"
             return
         }
 
+        val timedComplaints = resolvedComplaints.filter { it.resolvedAt != null }
+        
+        if (timedComplaints.isEmpty()) {
+            binding.tvAvgResolutionTime.text = "${resolvedComplaints.size} cases resolved"
+            return
+        }
+
         var totalTimeMillis: Long = 0
-        resolvedComplaints.forEach { complaint ->
+        timedComplaints.forEach { complaint ->
             val diff = complaint.resolvedAt!!.toDate().time - complaint.timestamp.toDate().time
             totalTimeMillis += diff
         }
 
-        val avgMillis = totalTimeMillis / resolvedComplaints.size
+        val avgMillis = totalTimeMillis / timedComplaints.size
         val hours = TimeUnit.MILLISECONDS.toHours(avgMillis)
         val days = TimeUnit.MILLISECONDS.toDays(avgMillis)
 
@@ -61,10 +68,19 @@ class ReportsFragment : Fragment() {
             .groupBy { it.category }
             .mapValues { it.value.size }
             
+        if (_binding == null || context == null) return
+
         binding.layoutResolvedStats.removeAllViews()
+        if (resolvedByCategory.isEmpty()) {
+            val emptyView = TextView(requireContext())
+            emptyView.text = "No categories resolved yet"
+            binding.layoutResolvedStats.addView(emptyView)
+            return
+        }
+
         resolvedByCategory.forEach { (category, count) ->
-            val itemView = LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1, binding.layoutResolvedStats, false)
-            (itemView.findViewById<View>(android.R.id.text1) as TextView).text = "$category: $count resolved"
+            val itemView = LayoutInflater.from(requireContext()).inflate(android.R.layout.simple_list_item_1, binding.layoutResolvedStats, false)
+            (itemView.findViewById<View>(android.R.id.text1) as TextView).text = "$category: $count cases"
             binding.layoutResolvedStats.addView(itemView)
         }
     }
